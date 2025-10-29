@@ -1,4 +1,3 @@
-
 SELECT * FROM City;
 SELECT * FROM Volunteer;
 SELECT * FROM Family;
