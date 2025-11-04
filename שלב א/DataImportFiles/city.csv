@@ -1,0 +1,400 @@
+4,Rishon LeZion,Center
+5,Petah Tikva,Center
+6,Afula,North
+7,Beer Sheva,South
+8,Netanya,Center
+9,Ashdod,South
+10,Holon,Center
+11,Nazareth,North
+12,Eilat,South
+13,Ramat Gan,Center
+14,Dimona_1,Center
+15,Petah Tikva_2,Center
+16,Hadera_3,North
+17,Beer Sheva_4,South
+18,Tel Aviv_5,Center
+19,Migdal HaEmek_6,South
+20,Yokneam_7,South
+21,Beit Shemesh_8,North
+22,Gan Yavne_9,South
+23,Migdal HaEmek_10,Center
+24,Safed_11,North
+25,Rishon Lezion_12,Center
+26,Ofakim_13,Center
+27,Eilat_14,South
+28,Shoham_15,North
+29,Hod Hasharon_16,North
+30,Hadera_17,South
+31,Ramat Hasharon_18,South
+32,Hod Hasharon_19,North
+33,Gan Yavne_20,South
+34,Safed_21,Center
+35,Lod_22,North
+36,Kiryat Ata_23,North
+37,Ramat Gan_24,Center
+38,Beitar Illit_25,South
+39,Hadera_26,Center
+40,Gan Yavne_27,Center
+41,Carmiel_28,South
+42,Safed_29,North
+43,Jerusalem_30,South
+44,Rishon Lezion_31,South
+45,Beitar Illit_32,Center
+46,Arad_33,North
+47,Safed_34,North
+48,Tira_35,Center
+49,Ramat Gan_36,Center
+50,Hadera_37,North
+51,Ra'anana_38,North
+52,Kiryat Bialik_39,North
+53,Beitar Illit_40,Center
+54,Maale Adumim_41,North
+55,Nahariya_42,North
+56,Bnei Brak_43,Center
+57,Kiryat Yam_44,North
+58,Safed_45,North
+59,Beit Shemesh_46,North
+60,Migdal HaEmek_47,Center
+61,Yokneam_48,Center
+62,Dimona_49,South
+63,Or Yehuda_50,South
+64,Ramla_51,South
+65,Nahariya_52,Center
+66,Pardes Hanna_53,North
+67,Tiberias_54,North
+68,Beit Shemesh_55,Center
+69,Lod_56,North
+70,Sderot_57,Center
+71,Herzliya_58,South
+72,Kfar Tavor_59,North
+73,Efrat_60,South
+74,Jerusalem_61,South
+75,Efrat_62,North
+76,Sderot_63,Center
+77,Dimona_64,Center
+78,Beer Sheva_65,South
+79,Zikhron Yaakov_66,South
+80,Bnei Brak_67,North
+81,Haifa_68,North
+82,Kfar Saba_69,Center
+83,Efrat_70,North
+84,Kfar Tavor_71,Center
+85,Petah Tikva_72,South
+86,Kiryat Yam_73,Center
+87,Tiberias_74,North
+88,Yokneam_75,Center
+89,Gan Yavne_76,North
+90,Modiin_77,South
+91,Eilat_78,South
+92,Efrat_79,North
+93,Sderot_80,North
+94,Ramla_81,Center
+95,Tira_82,Center
+96,Ra'anana_83,Center
+97,Tel Aviv_84,North
+98,Ashdod_85,South
+99,Bat Yam_86,Center
+100,Shoham_87,North
+101,Hod Hasharon_88,Center
+102,Sderot_89,South
+103,Pardes Hanna_90,Center
+104,Nahariya_91,North
+105,Tira_92,Center
+106,Shoham_93,South
+107,Beit Shemesh_94,Center
+108,Kiryat Arba_95,Center
+109,Ramat Gan_96,North
+110,Holon_97,North
+111,Modiin_98,South
+112,Jerusalem_99,South
+113,Ramla_100,North
+114,Jerusalem_101,North
+115,Or Yehuda_102,South
+116,Eilat_103,Center
+117,Shoham_104,North
+118,Yavne_105,North
+119,Gan Yavne_106,North
+120,Herzliya_107,Center
+121,Netanya_108,South
+122,Pardes Hanna_109,North
+123,Beer Sheva_110,North
+124,Tiberias_111,North
+125,Kiryat Arba_112,South
+126,Herzliya_113,Center
+127,Kiryat Arba_114,South
+128,Efrat_115,South
+129,Arad_116,South
+130,Kiryat Shmona_117,South
+131,Beer Sheva_118,North
+132,Sderot_119,Center
+133,Or Yehuda_120,South
+134,Pardes Hanna_121,South
+135,Kiryat Arba_122,Center
+136,Givatayim_123,Center
+137,Kfar Tavor_124,North
+138,Acre_125,North
+139,Arad_126,North
+140,Sderot_127,North
+141,Kiryat Arba_128,South
+142,Maale Adumim_129,South
+143,Eilat_130,North
+144,Kiryat Arba_131,Center
+145,Tiberias_132,Center
+146,Ofakim_133,South
+147,Arad_134,North
+148,Or Yehuda_135,Center
+149,Nahariya_136,North
+150,Shoham_137,Center
+151,Bat Yam_138,Center
+152,Ramat Gan_139,Center
+153,Efrat_140,Center
+154,Ramla_141,South
+155,Givatayim_142,South
+156,Hod Hasharon_143,South
+157,Haifa_144,Center
+158,Migdal HaEmek_145,North
+159,Sderot_146,South
+160,Ofakim_147,North
+161,Tel Aviv_148,North
+162,Yokneam_149,Center
+163,Kiryat Yam_150,North
+164,Ramat Hasharon_151,Center
+165,Haifa_152,North
+166,Hadera_153,Center
+167,Arad_154,North
+168,Shoham_155,North
+169,Dimona_156,North
+170,Netanya_157,Center
+171,Kiryat Gat_158,Center
+172,Yokneam_159,Center
+173,Haifa_160,Center
+174,Sderot_161,Center
+175,Ra'anana_162,South
+176,Beer Sheva_163,South
+177,Petah Tikva_164,Center
+178,Acre_165,North
+179,Bnei Brak_166,Center
+180,Ramat Hasharon_167,Center
+181,Ra'anana_168,South
+182,Kiryat Shmona_169,Center
+183,Maale Adumim_170,North
+184,Acre_171,South
+185,Ofakim_172,North
+186,Kfar Tavor_173,North
+187,Ofakim_174,Center
+188,Tira_175,Center
+189,Gan Yavne_176,Center
+190,Kiryat Gat_177,North
+191,Kiryat Yam_178,South
+192,Hod Hasharon_179,South
+193,Ramat Hasharon_180,North
+194,Bnei Brak_181,North
+195,Tira_182,South
+196,Ramat Gan_183,Center
+197,Gan Yavne_184,Center
+198,Ramat Hasharon_185,North
+199,Haifa_186,Center
+200,Nahariya_187,North
+201,Rishon Lezion_188,North
+202,Jerusalem_189,North
+203,Tiberias_190,South
+204,Bnei Brak_191,South
+205,Safed_192,North
+206,Pardes Hanna_193,North
+207,Tira_194,Center
+208,Yokneam_195,Center
+209,Eilat_196,North
+210,Ramat Hasharon_197,Center
+211,Rishon Lezion_198,South
+212,Kiryat Shmona_199,South
+213,Petah Tikva_200,South
+214,Eilat_201,Center
+215,Tiberias_202,North
+216,Rishon Lezion_203,South
+217,Ramla_204,Center
+218,Herzliya_205,Center
+219,Beitar Illit_206,North
+220,Ramat Gan_207,South
+221,Carmiel_208,North
+222,Gan Yavne_209,North
+223,Pardes Hanna_210,Center
+224,Sderot_211,North
+225,Modiin_212,Center
+226,Hadera_213,North
+227,Kfar Tavor_214,North
+228,Bnei Brak_215,South
+229,Beit Shemesh_216,South
+230,Kiryat Ata_217,North
+231,Or Yehuda_218,South
+232,Beit Shemesh_219,Center
+233,Hadera_220,Center
+234,Lod_221,South
+235,Kfar Tavor_222,South
+236,Ramat Gan_223,South
+237,Ra'anana_224,North
+238,Beit Shemesh_225,South
+239,Eilat_226,Center
+240,Arad_227,North
+241,Tira_228,Center
+242,Kiryat Gat_229,Center
+243,Petah Tikva_230,Center
+244,Safed_231,Center
+245,Ramla_232,North
+246,Ashdod_233,Center
+247,Ofakim_234,South
+248,Lod_235,North
+249,Acre_236,Center
+250,Kiryat Ata_237,South
+251,Kfar Saba_238,Center
+252,Tiberias_239,Center
+253,Hadera_240,North
+254,Kiryat Arba_241,Center
+255,Kfar Saba_242,South
+256,Hadera_243,Center
+257,Gan Yavne_244,North
+258,Nahariya_245,Center
+259,Bat Yam_246,South
+260,Kiryat Ata_247,South
+261,Givatayim_248,South
+262,Safed_249,South
+263,Kiryat Bialik_250,North
+264,Kiryat Shmona_251,Center
+265,Safed_252,South
+266,Haifa_253,North
+267,Ra'anana_254,South
+268,Beit Shemesh_255,North
+269,Acre_256,North
+270,Arad_257,Center
+271,Hadera_258,Center
+272,Ramat Hasharon_259,Center
+273,Efrat_260,North
+274,Yavne_261,North
+275,Dimona_262,South
+276,Zikhron Yaakov_263,North
+277,Pardes Hanna_264,South
+278,Kiryat Bialik_265,North
+279,Bat Yam_266,South
+280,Beit Shemesh_267,Center
+281,Eilat_268,North
+282,Yavne_269,North
+283,Pardes Hanna_270,South
+284,Lod_271,Center
+285,Kiryat Bialik_272,North
+286,Acre_273,Center
+287,Ashdod_274,Center
+288,Yokneam_275,South
+289,Shoham_276,North
+290,Kfar Saba_277,North
+291,Kiryat Ata_278,South
+292,Efrat_279,Center
+293,Nahariya_280,South
+294,Arad_281,North
+295,Safed_282,North
+296,Nahariya_283,Center
+297,Herzliya_284,South
+298,Kiryat Arba_285,North
+299,Ramat Hasharon_286,Center
+300,Jerusalem_287,Center
+301,Kfar Saba_288,Center
+302,Maale Adumim_289,Center
+303,Kiryat Yam_290,North
+304,Efrat_291,North
+305,Jerusalem_292,North
+306,Ofakim_293,South
+307,Ra'anana_294,North
+308,Kfar Saba_295,South
+309,Hod Hasharon_296,Center
+310,Ra'anana_297,South
+311,Kiryat Bialik_298,South
+312,Beit Shemesh_299,Center
+313,Zikhron Yaakov_300,Center
+314,Gan Yavne_301,North
+315,Givatayim_302,South
+316,Tel Aviv_303,North
+317,Yokneam_304,Center
+318,Or Yehuda_305,North
+319,Ramat Hasharon_306,Center
+320,Kiryat Ata_307,North
+321,Holon_308,South
+322,Netanya_309,North
+323,Safed_310,South
+324,Kiryat Ata_311,Center
+325,Migdal HaEmek_312,South
+326,Maale Adumim_313,North
+327,Hadera_314,North
+328,Kiryat Gat_315,South
+329,Kiryat Bialik_316,Center
+330,Rishon Lezion_317,North
+331,Eilat_318,South
+332,Ramla_319,South
+333,Kiryat Arba_320,Center
+334,Modiin_321,Center
+335,Ofakim_322,North
+336,Kfar Saba_323,South
+337,Jerusalem_324,North
+338,Efrat_325,North
+339,Petah Tikva_326,Center
+340,Bnei Brak_327,North
+341,Haifa_328,South
+342,Carmiel_329,Center
+343,Givatayim_330,South
+344,Carmiel_331,North
+345,Herzliya_332,South
+346,Tira_333,North
+347,Bat Yam_334,South
+348,Bat Yam_335,South
+349,Ramat Hasharon_336,Center
+350,Shoham_337,Center
+351,Ramat Hasharon_338,South
+352,Kfar Tavor_339,South
+353,Givatayim_340,Center
+354,Givatayim_341,North
+355,Jerusalem_342,Center
+356,Dimona_343,North
+357,Ofakim_344,Center
+358,Givatayim_345,North
+359,Kiryat Ata_346,North
+360,Beit Shemesh_347,Center
+361,Tiberias_348,North
+362,Givatayim_349,Center
+363,Beitar Illit_350,Center
+364,Beit Shemesh_351,Center
+365,Gan Yavne_352,Center
+366,Hod Hasharon_353,South
+367,Ramat Gan_354,Center
+368,Tiberias_355,North
+369,Kiryat Ata_356,North
+370,Beit Shemesh_357,South
+371,Bnei Brak_358,Center
+372,Tiberias_359,North
+373,Ramla_360,Center
+374,Ra'anana_361,North
+375,Yavne_362,North
+376,Sderot_363,South
+377,Lod_364,Center
+378,Pardes Hanna_365,South
+379,Ramat Gan_366,Center
+380,Ofakim_367,North
+381,Yokneam_368,North
+382,Hod Hasharon_369,North
+383,Gan Yavne_370,North
+384,Holon_371,North
+385,Maale Adumim_372,North
+386,Rishon Lezion_373,North
+387,Efrat_374,South
+388,Tel Aviv_375,Center
+389,Ofakim_376,South
+390,Kiryat Bialik_377,South
+391,Dimona_378,North
+392,Kfar Tavor_379,North
+393,Hadera_380,North
+394,Givatayim_381,Center
+395,Yavne_382,North
+396,Ramla_383,South
+397,Carmiel_384,North
+398,Sderot_385,Center
+399,Or Yehuda_386,North
+400,Ashdod_387,Center
+1,Kfar Saba_388,Center
+2,Kfar Tavor_389,South
+3,Bnei Brak_390,South
