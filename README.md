@@ -20,9 +20,9 @@
 
 הדיאגרמה שלנו מתארת מערכת לניהול סלי מזון.
 
-🖼️ תרשים ERD כללי:
+תרשים ERD כללי
 <img width="4512" height="1797" alt="ERD Diagram" src="https://github.com/user-attachments/assets/d20d9ad0-2cfe-4c63-bc2d-8a4f3a63a0b0" />
-🖼️ פירוט הישויות:
+פירוט הישויות
 <img width="1993" height="843" alt="ERD Entities" src="https://github.com/user-attachments/assets/3a978b1c-c369-4807-950a-2922aec06cde" />
 🧱 ישויות במערכת
 | שם הישות       | תיאור                                   | תכונות                                                     |
