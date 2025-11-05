@@ -69,6 +69,10 @@
 מילוי באמצעות קובצי CSV שנוצרו על ידי AI
 
 טבלאות: City, Volunteer, Family, Supplier.
+הכנסה לבסיס נתונים עם פקודות COPY:
+
+<img width="550" height="106" alt="צילום מסך 2025-11-05 152135" src="https://github.com/user-attachments/assets/a008be3e-eca4-4692-b7c9-67effd287c98" />
+
 
 מילוי באמצעות סקריפט Python
 
