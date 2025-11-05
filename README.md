@@ -84,6 +84,6 @@ FoodBasket_Groceries.
 גיבוי ושחזור:  
 <img width="876" height="686" alt="image (3)" src="https://github.com/user-attachments/assets/1e8d8898-605f-4994-a442-0130f76fbc71" />
 
-<img width="1448" height="92" alt="צילום מסך 2025-11-04 164245" src="https://github.com/user-attachments/assets/d0503554-550b-4c41-bfeb-78fbb8a1344e" />
 
+<img width="1448" height="92" alt="צילום מסך 2025-11-04 164245" src="https://github.com/user-attachments/assets/3fb8abce-574b-4b3c-bf24-9a177eca600a" />
 
