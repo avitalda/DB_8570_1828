@@ -100,21 +100,37 @@ FoodBasket_Groceries.
 5.לזהות אילו ספקים היו המשמעותיים ביותר מבחינת ערך כלכלי, מציג רשימת ספקים שסיפקו סחורה שערכה הכולל מעל לממוצע הכללי של כל הספקים — עם חישוב תת־שאילתא להשוואה לערך ממוצע.
 
 SELECT 
+
     s.supplier_name,
+    
     ROUND(SUM(g.unit_price * fg.quantity), 2) AS total_value_supplied
+    
 FROM Supplier s
+
 JOIN Groceries g ON s.supplier_id = g.supplier_id
+
 JOIN FoodBasket_Groceries fg ON g.groceries_id = fg.groceries_id
+
 GROUP BY s.supplier_name
+
 HAVING SUM(g.unit_price * fg.quantity) > (
+
     SELECT AVG(total_value)
+    
     FROM (
+    
         SELECT SUM(g2.unit_price * fg2.quantity) AS total_value
+        
         FROM Groceries g2
+        
         JOIN FoodBasket_Groceries fg2 ON g2.groceries_id = fg2.groceries_id
+        
         GROUP BY g2.supplier_id
+        
     ) AS supplier_totals
+    
 )
+
 ORDER BY total_value_supplied DESC;
 
 <img width="603" height="56" alt="צילום מסך 2025-11-06 164656" src="https://github.com/user-attachments/assets/5e1ae484-c351-475b-9562-52924aad662d" />
