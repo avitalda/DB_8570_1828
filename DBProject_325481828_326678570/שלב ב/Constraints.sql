@@ -11,7 +11,7 @@ ALTER TABLE FoodBasket
 ALTER COLUMN status SET DEFAULT 'Pending';
 
 --  טבלת Volunteer – אילוץ CHECK
--- בדיקה האם תאריך ההצטרפות של המתנדב הוא תקין- בין שנת 2000 לתאריך הנוכחי
+-- בדיקה האם תאריך ההצטרפות של המתנדב הוא תקין- בין שנת 2020 לתאריך הנוכחי
 ALTER TABLE Volunteer
 ADD CONSTRAINT chk_join_year 
 CHECK (joiningdate >= DATE '2020-01-01' AND joiningdate <= CURRENT_DATE);
