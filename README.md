@@ -102,7 +102,81 @@ FoodBasket_Groceries.
 
 <h2><span style="background-color: yellow;">שלב ב שאילתות ואילוצים:</span></h2>
 
-**שאילתות select:**
+**שאילתות SELECT:**
+
+1.מציגה את שם המשפחה של מקבל הסל, את העיר שלו, ואת שם המתנדב שחילק את הסל,
+
+אך רק עבור הסלים שחולקו על ידי מתנדבים שהצטרפו בשנת 2024
+
+    SELECT 
+    f.family_name,
+    v.volunteer_name,
+    c.city_name,
+    FROM foodbasket fb
+    JOIN family f ON fb.family_id = f.family_id
+    JOIN volunteer v ON fb.volunteer_id = v.volunteer_id
+    JOIN city c ON f.city_id = c.city_id
+    WHERE EXTRACT(YEAR FROM v.joiningdate) = 2024
+    ORDER BY v.volunteer_id DESC;
+
+<img width="865" height="519" alt="image" src="https://github.com/user-attachments/assets/a5ecc92d-d1a0-4539-af2a-3c5decc4b7b5" />
+
+<img width="865" height="121" alt="image" src="https://github.com/user-attachments/assets/edd46488-537c-4447-ba13-568cbacc846a" />
+
+2.מציגה את כל הסלים שחולקו בשנת 2025, כולל התאריך בו חולק הסל (ממויין לפי סדר עולה), 
+
+שם המשפחה של המקבל, שם המתנדב שהעביר את הסל, וסוג הסל.
+
+    SELECT 
+    f.family_name,
+    v.volunteer_name,
+    fb.kind,
+    fb.dateofreceipt
+    FROM foodbasket fb
+    JOIN family f ON fb.family_id = f.family_id
+    JOIN volunteer v ON fb.volunteer_id = v.volunteer_id
+    JOIN city c ON f.city_id = c.city_id
+    WHERE EXTRACT(YEAR FROM fb.dateofreceipt) = 2025
+    ORDER BY fb.dateofreceipt ASC;
+
+  <img width="865" height="738" alt="image" src="https://github.com/user-attachments/assets/99cefa0e-7501-4d51-93ff-d56143a212b7" />
+
+<img width="865" height="106" alt="image" src="https://github.com/user-attachments/assets/43be961f-1c05-4a0e-af92-2b25318f8d7d" />
+
+
+3.כמות המצרכים הכוללת שקבלה כל משפחה.
+
+    SELECT 
+    f.family_name,
+    SUM(fg.quantity) AS total_items,
+    COUNT(DISTINCT fb.foodbasket_id) AS baskets_count
+    FROM family f
+    JOIN foodbasket fb ON f.family_id = fb.family_id
+    JOIN foodbasket_groceries fg ON fb.foodbasket_id = fg.foodbasket_id
+    GROUP BY f.family_name
+    ORDER BY total_items DESC;
+
+    <img width="865" height="532" alt="image" src="https://github.com/user-attachments/assets/3ef2ab67-0670-4b94-8132-d5ce8c93f54e" />
+  
+  <img width="865" height="167" alt="image" src="https://github.com/user-attachments/assets/1e5e548f-8623-4e13-a20d-f612f1997ca1" />
+
+4.רשימת המתנדבים והעיר שלהם, כולל מספר המשפחות שהם עזרו להם ממוין לפי שם המשפחה. 
+
+    SELECT 
+    v.volunteer_name,
+    c.city_name,
+    COUNT(DISTINCT fb.family_id) AS families_helped
+    FROM volunteer v
+    JOIN city c ON v.city_id = c.city_id
+    JOIN foodbasket fb ON fb.volunteer_id = v.volunteer_id
+    GROUP BY v.volunteer_name, c.city_name
+    ORDER BY families_helped DESC;
+
+  <img width="865" height="620" alt="image" src="https://github.com/user-attachments/assets/e1c610d8-513f-49c4-bb4a-dabfcfcc7d78" />
+
+  <img width="865" height="114" alt="image" src="https://github.com/user-attachments/assets/09047af7-62f1-4a95-bb86-d936baefae4f" />
+
+
 
 5.לזהות אילו ספקים היו המשמעותיים ביותר מבחינת ערך כלכלי, מציג רשימת ספקים שסיפקו סחורה שערכה הכולל מעל לממוצע הכללי של כל הספקים — עם חישוב תת־שאילתא להשוואה לערך ממוצע.
 
