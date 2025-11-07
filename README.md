@@ -13,7 +13,7 @@
 - [גיבוי ושחזור](#-גיבוי)
 - [חלק ב](#-גיבוי)
   - [שאילתות SELECT](#-גיבוי)
-  - [גשאילתות UPDATE](#-גיבוי)
+  - [שאילתות UPDATE](#-גיבוי)
   - [שאילתות DELETE](#-גיבוי)
   - [פקודות rollback & commit](#-גיבוי)
   - [אילוצים](#-גיבוי)
@@ -156,7 +156,7 @@ FoodBasket_Groceries.
     GROUP BY f.family_name
     ORDER BY total_items DESC;
 
-    <img width="865" height="532" alt="image" src="https://github.com/user-attachments/assets/3ef2ab67-0670-4b94-8132-d5ce8c93f54e" />
+  <img width="865" height="532" alt="image" src="https://github.com/user-attachments/assets/3ef2ab67-0670-4b94-8132-d5ce8c93f54e" />
   
   <img width="865" height="167" alt="image" src="https://github.com/user-attachments/assets/1e5e548f-8623-4e13-a20d-f612f1997ca1" />
 
@@ -329,6 +329,80 @@ FoodBasket_Groceries.
 
 
 **שאילתות DELETE**
+על מנת לבצע את שאילתות המחיקה היינו צריכות שינויים בהגדרות של המפתחות הזרים:
+
+אם סל נמחק בסכמה foodbasket אז ימחק אוטומטית הסלים שקשורים אליו בקשר foodbasket_groceries.
+
+הסבר: ON DELETE CASCADE אומר ל־PostgreSQL:
+
+"אם רשומה מטבלת foodbasket נמחקת — תמחק אוטומטית גם את כל הרשומות המשויכות אליה ב־foodbasket_groceries."
 
 
+
+    ALTER TABLE foodbasket_groceries
+    DROP CONSTRAINT foodbasket_groceries_foodbasket_id_fkey;
+ 
+    TABLE foodbasket_groceries
+    ADD CONSTRAINT foodbasket_groceries_foodbasket_id_fkey
+    FOREIGN KEY (foodbasket_id)
+    REFERENCES foodbasket(foodbasket_id)
+    ON DELETE CASCADE;
+
+2.אם ספק נמחק אז גם כל המוצרים שלו ימחקו.
+
+    ALTER TABLE groceries
+    DROP CONSTRAINT groceries_supplier_id_fkey;
+
+
+    ALTER TABLE groceries
+    ADD CONSTRAINT groceries_supplier_id_fkey
+    FOREIGN KEY (supplier_id)
+    REFERENCES supplier(supplier_id)
+    ON DELETE CASCADE;
+    
+1.מחיקת כל הסלים שנשלחו לפני השלוש שנים האחרונות.
+           
+    DELETE FROM foodbasket
+    WHERE dateofrecepit <= (CURRENT_DATE - INTERVAL '3 years');
+
+<img width="685" height="397" alt="צילום מסך 2025-11-07 120740" src="https://github.com/user-attachments/assets/718b14ce-b62a-4866-8217-2b3a6ca0d397" />
+
+<img width="386" height="43" alt="image" src="https://github.com/user-attachments/assets/5c9004af-dc13-42a8-abc9-107e7d0cf5dc" />
+
+<img width="981" height="302" alt="image" src="https://github.com/user-attachments/assets/e383b735-e134-49f6-9b80-99f3a9a78da2" />
+
+2.מחיקת כל הספקים שלא מספקים אף מוצר.
+
+    DELETE FROM supplier s
+    WHERE NOT EXISTS (
+    SELECT 1
+    FROM groceries g
+    WHERE g.supplier_id = s.supplier_id
+    );
+
+
+<img width="540" height="457" alt="image" src="https://github.com/user-attachments/assets/32631567-e1b7-4f0d-8cdd-44a1160e9e4b" />
+
+<img width="503" height="303" alt="image" src="https://github.com/user-attachments/assets/2e727ce2-818f-43b1-af19-f944dbdae5c3" />
+
+<img width="552" height="365" alt="image" src="https://github.com/user-attachments/assets/7e52d97c-b80d-4dc2-b859-aea7341dadbb" />
+
+
+
+
+
+
+
+**פקודות Rollback & Commit**
+Rollback:
+
+<img width="641" height="378" alt="image" src="https://github.com/user-attachments/assets/c78b45c5-6051-4be0-b208-6f64abb9003e" />
+
+<img width="623" height="353" alt="image" src="https://github.com/user-attachments/assets/2e536f84-a51f-4737-98ee-e92198ac37fb" />
+
+Commit:
+
+<img width="598" height="361" alt="image" src="https://github.com/user-attachments/assets/f02f5bcc-0c38-4814-badc-53d855fa8d20" />
+
+<img width="675" height="361" alt="image" src="https://github.com/user-attachments/assets/bf9c8fad-dc8d-4be7-9c6f-205b001fbec1" />
 
