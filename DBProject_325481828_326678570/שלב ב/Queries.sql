@@ -109,14 +109,26 @@ ORDER BY days_since_sent DESC;
 
 
 ###8
-###
+###זיהוי המתנדבים החדשים שהכי פעילים
+###השאילתה מציגה את שמות המתנדבים שהצטרפו במהלך השנה הנוכחית,שם העיר של המתנדב וכמה סלים הוא חילק בפועל
+SELECT 
+    v.volunteer_name,
+    c.city_name,
+    v.joiningdate,
+    COUNT(fb.foodbasket_id) AS baskets_delivered
+FROM volunteer v
+JOIN city c ON v.city_id = c.city_id
+JOIN foodbasket fb ON v.volunteer_id = fb.volunteer_id
+WHERE fb.status = 'delivered'
+  AND EXTRACT(YEAR FROM v.joiningdate) = EXTRACT(YEAR FROM CURRENT_DATE)
+GROUP BY v.volunteer_name, c.city_name, v.joiningdate
+ORDER BY baskets_delivered DESC;
 
 
 
 
 
-
-###update
+###UPDATE
 ###1.
 ###מעדכן את הסוג של הסל שתאריך החלוקה המשוער שלו הוא 16\6 (לא משנה באיזה שנה) לסוג "חג"
 UPDATE foodbasket
@@ -139,8 +151,24 @@ SET dateofrecepit =
     DATE '2020-01-01' 
     + (floor(random() * ((current_date+365 - DATE '2020-01-01')::int))) * INTERVAL '1 day';
 
+###DELETE
+###1
+###מחיקת כל הסלים שנשלחו לפני השלוש שנים האחרונות.
+DELETE FROM foodbasket
+WHERE dateofrecepit <= (CURRENT_DATE - INTERVAL '3 years');
+
+###2
+###מחיקת כל הספקים שלא מספקים אף מוצר.
+DELETE FROM supplier s
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM groceries g
+    WHERE g.supplier_id = s.supplier_id
+);
 
 
+###3
+###
 
 
 
