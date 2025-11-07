@@ -53,6 +53,64 @@ JOIN foodbasket fb ON fb.volunteer_id = v.volunteer_id
 GROUP BY v.volunteer_name, c.city_name
 ORDER BY families_helped DESC;
 
+###5
+###רשימת ספקים שסיפקו סחורה שערכה הכולל מעל לממוצע הכללי של כל הספקים — עם חישוב תת־שאילתא להשוואה לערך ממוצע.
+SELECT 
+    s.supplier_name,
+    ROUND(SUM(g.unit_price * fg.quantity), 2) AS total_value_supplied
+FROM Supplier s
+JOIN Groceries g ON s.supplier_id = g.supplier_id
+JOIN FoodBasket_Groceries fg ON g.groceries_id = fg.groceries_id
+GROUP BY s.supplier_name
+HAVING SUM(g.unit_price * fg.quantity) > (
+    SELECT AVG(total_value)
+    FROM (
+        SELECT SUM(g2.unit_price * fg2.quantity) AS total_value
+        FROM Groceries g2
+        JOIN FoodBasket_Groceries fg2 ON g2.groceries_id = fg2.groceries_id
+        GROUP BY g2.supplier_id
+    ) AS supplier_totals
+)
+ORDER BY total_value_supplied DESC;
+
+
+###6
+###מציג בכל עיר – כמה מתנדבים יש וכמה סלים נמסרו בפועל (סטטוס 'delivered')
+SELECT 
+    c.city_name AS city,
+    COUNT(DISTINCT v.volunteer_id) AS total_volunteers,
+    COUNT(fb.foodbasket_id) AS total_baskets_delivered
+FROM city c
+JOIN volunteer v ON c.city_id = v.city_id
+LEFT JOIN foodbasket fb ON v.volunteer_id = fb.volunteer_id
+WHERE fb.status = 'delivered'
+GROUP BY c.city_name
+ORDER BY total_baskets_delivered DESC;
+
+
+###7
+###מציגה את כל הסלים שעדיין לא נמסרו למרות שעברו 7 ימים ממועד המסירה הצפוי.
+אפשר להוסיף דוח מעקב על “משלוחים תקועים” במערכת.
+ SELECT 
+    fb.foodbasket_id,
+    fb.kind,
+    fb.status,
+    fb.dateofrecepit,
+    v.volunteer_name,
+    f.family_name,
+    (CURRENT_DATE - fb.dateofrecepit) AS days_since_sent
+FROM foodbasket fb
+JOIN volunteer v ON fb.volunteer_id = v.volunteer_id
+JOIN family f ON fb.family_id = f.family_id
+WHERE fb.status <> 'delivered'
+  AND (CURRENT_DATE - fb.dateofrecepit) > 7
+ORDER BY days_since_sent DESC;
+   
+
+
+###8
+###
+
 
 
 
@@ -80,6 +138,9 @@ UPDATE foodbasket
 SET dateofrecepit =
     DATE '2020-01-01' 
     + (floor(random() * ((current_date+365 - DATE '2020-01-01')::int))) * INTERVAL '1 day';
+
+
+
 
 
 
