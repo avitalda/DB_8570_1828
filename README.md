@@ -317,9 +317,9 @@ FoodBasket_Groceries.
 "חג". (סתם נתנו דוג' לתאריך. אפשר לשנות את התאריך לפי מה שרוצים.)
 
     UPDATE foodbasket
-    SET dateofrecepit =
-    DATE '2020-01-01' 
-    + (floor(random() * ((current_date+365 - DATE '2020-01-01')::int))) * INTERVAL '1 day';
+    SET kins = 'holiday'
+    WHERE EXTRACT(MONTH FROM dateofreceipt) = 6
+    AND EXTRACT(DAY FROM dateofreceipt) = 16;
 
 <img width="865" height="573" alt="image" src="https://github.com/user-attachments/assets/8c05c913-c12e-4c59-a6ff-b080e6fa9125" />
 
@@ -329,7 +329,8 @@ FoodBasket_Groceries.
 
 
 **שאילתות DELETE**
-על מנת לבצע את שאילתות המחיקה היינו צריכות שינויים בהגדרות של המפתחות הזרים:
+ 
+ עלמנת לבצע את שאילתות המחיקה היינו צריכות שינויים בהגדרות של המפתחות הזרים:
 
 אם סל נמחק בסכמה foodbasket אז ימחק אוטומטית הסלים שקשורים אליו בקשר foodbasket_groceries.
 
@@ -394,6 +395,7 @@ FoodBasket_Groceries.
 
 
 **פקודות Rollback & Commit**
+
 Rollback:
 
 <img width="641" height="378" alt="image" src="https://github.com/user-attachments/assets/c78b45c5-6051-4be0-b208-6f64abb9003e" />
