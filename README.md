@@ -360,6 +360,20 @@ FoodBasket_Groceries.
     FOREIGN KEY (supplier_id)
     REFERENCES supplier(supplier_id)
     ON DELETE CASCADE;
+
+3.אם מחקתי משפחה אז גם כל הסלים שלה ימחקו.
+
+    ALTER TABLE foodbasket
+    DROP CONSTRAINT foodbasket_family_id_fkey;
+
+    ALTER TABLE foodbasket
+    ADD CONSTRAINT foodbasket_family_id_fkey
+    FOREIGN KEY (family_id)
+    REFERENCES family(family_id)
+    ON DELETE CASCADE;
+
+
+
     
 1.מחיקת כל הסלים שנשלחו לפני השלוש שנים האחרונות.
            
@@ -390,7 +404,16 @@ FoodBasket_Groceries.
 
 
 
+3.מחיקת כל המשפחות שמספר הנפשות במשפחה הוא מתחת ל3 (אם נרצה למשל לקזז מהתקציב ונחליט לעזור רק למשפחות עם שני ילדים ומעלה).
 
+    DELETE FROM family
+    WHERE number_of_people < 3;
+
+<img width="596" height="327" alt="image" src="https://github.com/user-attachments/assets/70000c0d-5a14-46e6-846d-d54d70cb2767" />
+
+<img width="532" height="117" alt="image" src="https://github.com/user-attachments/assets/53de6469-7f25-4583-9687-b7ec82c88346" />
+
+<img width="618" height="233" alt="image" src="https://github.com/user-attachments/assets/3ed147fe-a155-46ee-8535-a3b416160ad0" />
 
 
 
