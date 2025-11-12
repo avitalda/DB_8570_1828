@@ -343,7 +343,7 @@ FoodBasket_Groceries.
     ALTER TABLE foodbasket_groceries
     DROP CONSTRAINT foodbasket_groceries_foodbasket_id_fkey;
  
-    TABLE foodbasket_groceries
+    ALTER TABLE foodbasket_groceries
     ADD CONSTRAINT foodbasket_groceries_foodbasket_id_fkey
     FOREIGN KEY (foodbasket_id)
     REFERENCES foodbasket(foodbasket_id)
