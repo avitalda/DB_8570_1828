@@ -435,9 +435,9 @@ Commit:
 **אילוצים**
 1. אילוץ NOT NULL. שם משפחה לא יכול להיות חסר ערך.
 
-ALTER TABLE Family
+       ALTER TABLE Family
 
-ALTER COLUMN family_name SET NOT NULL;
+       ALTER COLUMN family_name SET NOT NULL;
 
 הכנסה סותרת + תמונת שגיאה:
 <img width="865" height="408" alt="image" src="https://github.com/user-attachments/assets/e3a7951a-8881-46fe-bf49-1b86fb9267e7" />
@@ -445,20 +445,20 @@ ALTER COLUMN family_name SET NOT NULL;
 
 2. אילוץ DEFAULT. ערך ברירת מחדל בסטטוס סל הוא "ממתין"
    
-ALTER TABLE FoodBasket
+        ALTER TABLE FoodBasket
 
-ALTER COLUMN status SET DEFAULT 'Pending';
+        ALTER COLUMN status SET DEFAULT 'Pending';
 
 
 במקרה זה אין נתונים סותרים להכניס. כיוון שהאילוץ הוא הכנסת ערך דיפולטיבי.
 
 3.אילוץ CHECK. בדיקה האם תאריך ההצטרפות של המתנדב הוא תקין- בין שנת 2020 לתאריך הנוכחי.
 
-ALTER TABLE Volunteer
-
-ADD CONSTRAINT chk_join_year 
-
-CHECK (joiningdate >= DATE '2020-01-01' AND joiningdate <= CURRENT_DATE);
+    ALTER TABLE Volunteer
+    
+    ADD CONSTRAINT chk_join_year 
+    
+    CHECK (joiningdate >= DATE '2020-01-01' AND joiningdate <= CURRENT_DATE);
 
 הכנסה סותרת + תמונת שגיאה:
 <img width="865" height="403" alt="image" src="https://github.com/user-attachments/assets/64266ff5-1ea5-4434-858f-907a7b745ef0" />
