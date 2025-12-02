@@ -77,3 +77,19 @@ WHERE NOT EXISTS (
     FROM family f
     WHERE f.family_name = c.name
 );
+
+--שינוי שם עמודה בטבלת סלי מזון, מת"ז מתנדב לת"ז שליח
+ALTER TABLE foodbasket RENAME COLUMN volunteer_id TO courier_id;
+
+
+--אינטגרציה בין טבלת סלי מזון לטבלת הזמנה, מכניסים לטבלת סלי מזון
+INSERT INTO foodbasket (foodbasket_id, kind, status, basketweight, dateofrecepit, family_id, courier_id)
+SELECT
+    400 + ROW_NUMBER() OVER (ORDER BY o.order_id) AS id,
+	'restaurant' AS kind,
+	'pending' AS status,
+	NULL AS bastetweight,
+	o.order_date,
+	o.customer_id AS family_id,
+	o.courier_id AS courier_id
+FROM "order" AS o;
