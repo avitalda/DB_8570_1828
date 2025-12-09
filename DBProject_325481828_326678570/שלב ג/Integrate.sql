@@ -93,3 +93,20 @@ SELECT
 	o.customer_id AS family_id,
 	o.courier_id AS courier_id
 FROM "order" AS o;
+
+--אינטגרציה בין מצרכים לארוחות
+--מה שמבדיל בינהן זה התכונה type
+-- 1. מוסיפים עמודה חדשה 
+ALTER TABLE groceries
+ADD COLUMN type char(1);
+
+-- 2. כל הרשומות הקיימות ב-groceries יקבלו type = 'B'
+UPDATE groceries
+SET type = 'B';
+
+-- 3. מונעים ערכים לא תקינים + דורשים שהעמודה לא תהיה NULL
+ALTER TABLE groceries
+ALTER COLUMN type SET NOT NULL,
+ADD CONSTRAINT groceries_type_chk
+CHECK (type IN ('B', 'D'));
+
