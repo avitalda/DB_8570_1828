@@ -514,9 +514,68 @@ ERD + DSD של בסיס הנתונים המאוחד
 קשר בין ארוחה לבין הישויות הנ"ל, בבסיס הנתונים המשותף כללנו כמובן את כל
 התכונות שהיו בטבלאות של בסיס הנתונים שניתן לנו ע"מ לערוך אינטגרציה)
 
+**מבטים:**
+
+--מבט מנקודת המבט של האגף המקורי
+
+--משלב FoodBasket + FoodBasket_Groceries + Groceries + Family
+
+--נותן: שם משפחה + מספר סלים + ערך כספי כולל של כל המוצרים שקיבלו.
+    
+      CREATE VIEW family_basket_summary AS
+      
+      SELECT
+      
+          f.family_id,
+          
+          f.family_name,
+          
+          COUNT(DISTINCT fb.foodbasket_id) AS total_baskets,
+          
+          COALESCE(SUM(g.unit_price * fbg.quantity), 0) AS total_value
+          
+      FROM Family f
+      
+      LEFT JOIN FoodBasket fb ON fb.family_id = f.family_id
+      
+      LEFT JOIN FoodBasket_Groceries fbg ON fbg.foodbasket_id = fb.foodbasket_id
+      
+      LEFT JOIN Groceries g ON g.groceries_id = fbg.groceries_id
+      
+      GROUP BY f.family_id, f.family_name;
+
+
+--בדיקת המבט
+
+    SELECT * 
+    
+    FROM family_basket_summary
+    
+<img width="586" height="541" alt="צילום מסך 2025-12-10 150217" src="https://github.com/user-attachments/assets/948f0cdb-a58f-45c0-a461-2b2be9dd1648" />
+
+    
+
+
+--כל המשפחות שקיבלו סלים בשווי מעל 500 ש"ח
+
+    SELECT * 
+    
+    FROM family_basket_summary
+    
+    WHERE total_value > 500;
+    
+<img width="580" height="408" alt="צילום מסך 2025-12-10 150103" src="https://github.com/user-attachments/assets/1b37005d-d055-40b8-9c96-e1f1d53401f1" />
 
 
 
- 
 
- 
+--סידור המשפחות לפי מספר הסלים שקיבלו מהכי הרבה להכי מעט
+
+    SELECT *
+    
+    FROM family_basket_summary
+    
+    ORDER BY total_baskets DESC;
+
+<img width="674" height="410" alt="צילום מסך 2025-12-10 150037" src="https://github.com/user-attachments/assets/60e3e907-8e08-41ea-bccf-246e34e439d6" />
+
