@@ -131,3 +131,36 @@ SELECT
 	oi.quantity AS quantity
 FROM order_item AS oi
 
+--שינו שם הטבלה מ"ארוחה-ערך תזונתי" ל"מוצרים- ערך תזונתי"
+ALTER TABLE dish_nutrition
+RENAME TO groceries_nutrition;
+
+--שינוי שם עמודה ממזהה ארוחה למזהה מצרך
+ALTER TABLE groceries_nutrition
+RENAME COLUMN dish_id TO groceries_id;
+
+-- הסרת מפתח ראשי לשינוי מזהים בטבלה groceries_nutrition
+ALTER TABLE groceries_nutrition
+DROP CONSTRAINT dish_nutrition_dish_id_fkey;
+
+-- עדכון מזהה המצרך למזהה המצרך+400, כדי שנהיה עיקביים במספר המזהה בין כל הטבלאות בטבלה groceries_nutrition
+UPDATE groceries_nutrition
+SET groceries_id = groceries_id + 400;
+
+--יצירת ה־foreign key מחדש שמצביע על groceries בטבלה groceries_nutrition
+ALTER TABLE groceries_nutrition
+ADD CONSTRAINT groceries_nutrition_groceries_id_fkey
+FOREIGN KEY (groceries_id)
+REFERENCES groceries(groceries_id)
+ON DELETE CASCADE;
+
+
+--הוספת רשומות חסרות עם ערכים רנדומליים בטבלה groceries_nutrition
+INSERT INTO groceries_nutrition (groceries_id, nutrition_id, value)
+SELECT 
+    g.groceries_id,
+    1 AS nutrition_id,  -- או מספר nutrition_id רלוונטי
+    (floor(random() * 100) + 1) AS value
+FROM groceries g
+LEFT JOIN groceries_nutrition gn ON gn.groceries_id = g.groceries_id
+WHERE gn.groceries_id IS NULL;
