@@ -251,3 +251,18 @@ SELECT
 FROM groceries g
 LEFT JOIN groceries_nutrition gn ON gn.groceries_id = g.groceries_id
 WHERE gn.groceries_id IS NULL;
+
+--מחיקת טבלאות ישנות
+DROP TABLE restaurant;
+
+DROP TABLE order_item;
+
+DROP TABLE "order";
+
+DROP TABLE courier1;
+
+DROP TABLE dish;
+
+DROP TABLE customer;
+
+DROP TABLE supplier_groceries_stage;
