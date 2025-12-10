@@ -11,13 +11,16 @@
 - [ישויות במערכת](#-ישויות-במערכת)  
 - [קשרים בין הישויות](#-קשרים-בין-הישויות)
 - [גיבוי ושחזור](#-גיבוי)
-- [חלק ב](#-גיבוי)
-  - [שאילתות SELECT](#-גיבוי)
-  - [שאילתות UPDATE](#-גיבוי)
-  - [שאילתות DELETE](#-גיבוי)
-  - [פקודות rollback & commit](#-גיבוי)
-  - [אילוצים](#-גיבוי)
-
+- [חלק ב](#-חלק-ב)
+  - [שאילתות SELECT](#-שאילתות-SELECT)
+  - [שאילתות UPDATE](#-שאילתות-UPDATE)
+  - [שאילתות DELETE](#-שאילתות-DELETE)
+  - [פקודות rollback & commit](#-פקודות)
+  - [אילוצים](#-אילוצים)
+- [חלק ג](#-חלק-ג)
+  - [אינטגרציה](#-אינצגרציה)
+  - [מבטים](#-מבטים)
+  - 
 
 נושא: חלוקת סלי מזון  
 
@@ -578,4 +581,76 @@ ERD + DSD של בסיס הנתונים המאוחד
     ORDER BY total_baskets DESC;
 
 <img width="674" height="410" alt="צילום מסך 2025-12-10 150037" src="https://github.com/user-attachments/assets/60e3e907-8e08-41ea-bccf-246e34e439d6" />
+
+
+--מבט מנקודת המבט של האגף שקיבלנו
+
+    CREATE VIEW dish_category AS
+    
+    SELECT
+    
+        g.groceries_id,
+        
+        g.groceries_name,
+        
+        g.unit_price,
+        
+        g.type,
+        
+        c.name AS category_name
+        
+    FROM Groceries g
+    
+    JOIN Category c
+    
+      ON g.category_id = c.category_id
+      
+    WHERE g.type = 'D';
+
+
+--בדיקת המבט
+
+    select * from dish_category
+    
+<img width="807" height="518" alt="image (3)" src="https://github.com/user-attachments/assets/69831688-5b74-428d-82e3-d9785232363f" />
+
+
+
+
+
+--כמה מצרכי D יש בכל קטגוריה (כמה ארוחות)
+
+    SELECT
+    
+        category_name,
+        
+        COUNT(*) AS num_items
+        
+    FROM dish_category
+    
+    GROUP BY category_name
+    
+    ORDER BY num_items DESC;
+    
+  <img width="363" height="510" alt="image (5)" src="https://github.com/user-attachments/assets/411830df-27cd-4b3b-ab9f-9ec8484d9cb6" />
+
+
+
+--מחיר ממוצע של מצרכי D בכל קטגוריה
+
+    SELECT
+    
+        category_name,
+        
+        ROUND(AVG(unit_price), 2) AS avg_price
+        
+    FROM groceries_d_by_category
+    
+    GROUP BY category_name
+    
+    ORDER BY avg_price DESC;
+    
+<img width="532" height="513" alt="image (6)" src="https://github.com/user-attachments/assets/4b0c9249-5219-4af0-a179-c260a2948b44" />
+
+
 
