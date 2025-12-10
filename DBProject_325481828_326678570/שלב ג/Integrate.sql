@@ -110,3 +110,15 @@ ALTER COLUMN type SET NOT NULL,
 ADD CONSTRAINT groceries_type_chk
 CHECK (type IN ('B', 'D'));
 
+--הוספת העמודה area לטבלת supplier
+ALTER TABLE supplier
+ADD COLUMN area varchar(255) DEFAULT NULL;
+
+--הכנסת נתונים של מסעדה לטבלת הספקים
+INSERT INTO supplier (supplier_id, supplier_name, phone_number, area)
+SELECT restaurant_id + 400,
+       name,
+       NULL,         -- אין לנו phone_number במסעדה, אז NULL
+       area
+FROM restaurant;
+
