@@ -122,3 +122,12 @@ SELECT restaurant_id + 400,
        area
 FROM restaurant;
 
+
+--foodbasket_groceries ו order_item איחוד בין הטבלאות 
+INSERT INTO foodbasket_groceries (foodbasket_id, groceries_id, quantity)
+SELECT
+	oi.order_id AS foodbasket_id,
+	oi.dish_id AS groceries_id,
+	oi.quantity AS quantity
+FROM order_item AS oi
+
