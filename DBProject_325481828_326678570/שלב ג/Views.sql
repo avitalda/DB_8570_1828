@@ -28,3 +28,34 @@ FROM family_basket_summary
 ORDER BY total_baskets DESC;
 
 --מבט מנקודת המבט של האגף שקיבלנו
+CREATE VIEW dish_category AS
+SELECT
+    g.groceries_id,
+    g.groceries_name,
+    g.unit_price,
+    g.type,
+    c.name AS category_name
+FROM Groceries g
+JOIN Category c
+  ON g.category_id = c.category_id
+WHERE g.type = 'D';
+
+--בדיקת המבט
+select * from dish_category
+
+
+--כמה מצרכי D יש בכל קטגוריה (כמה ארוחות)
+SELECT
+    category_name,
+    COUNT(*) AS num_items
+FROM dish_category
+GROUP BY category_name
+ORDER BY num_items DESC;
+
+--מחיר ממוצע של מצרכי D בכל קטגוריה
+SELECT
+    category_name,
+    ROUND(AVG(unit_price), 2) AS avg_price
+FROM groceries_d_by_category
+GROUP BY category_name
+ORDER BY avg_price DESC;
