@@ -464,6 +464,23 @@ Commit:
 <img width="865" height="403" alt="image" src="https://github.com/user-attachments/assets/64266ff5-1ea5-4434-858f-907a7b745ef0" />
 
 
+<h2><span style="background-color: yellow;"> שלב ג: אינטגרציה ומבטים</span></h2>
+
+על מנת לעשות את האינטגרציה עשינו מיזוג לשני בסיסי הנתונים.
+
+ERD + DSD של בסיס הנתונים שקיבלנו: Food Delivery
+
+<img width="793" height="571" alt="image (4)" src="https://github.com/user-attachments/assets/230b2263-834f-4ec7-87ab-5fc72c78f070" />
+
+<img width="1205" height="579" alt="image (5)" src="https://github.com/user-attachments/assets/8f1611e3-bd3e-4d8b-b5e5-ead629453cae" />
+
+ERD + DSD של בסיס הנתונים המאוחד
+
+<img width="4092" height="1608" alt="erdplus (3)" src="https://github.com/user-attachments/assets/dd611bc0-a7c0-4b0e-8002-5cd940221ab4" />
+
+
+
+
 
 
 
