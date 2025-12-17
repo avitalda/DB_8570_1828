@@ -2,16 +2,12 @@
 ALTER TABLE courier
 ADD COLUMN bonus NUMERIC(10,2) DEFAULT 0;
 
---הוספת טבלת תיעוד
-CREATE TABLE IF NOT EXISTS public.basket_audit (
-    audit_id      bigserial PRIMARY KEY,
-    event_time    timestamptz NOT NULL DEFAULT now(),
-    event_type    text        NOT NULL,
-    details       text,
-    foodbasket_id integer,
-    family_id     integer,
-    courier_id    integer,
+--מחיקת הערכים התזונתיים של מוצרי הבסיס
+delete from groceries_nutrition
+where groceries_id <401
 
-    CONSTRAINT basket_audit_foodbasket_fk FOREIGN KEY (foodbasket_id)
-        REFERENCES public.foodbasket (foodbasket_id) ON DELETE CASCADE
-);
+--הוספת ערכים תזונתיים לכל מוצרי הבסיס
+COPY groceries_nutrition(groceries_id, nutrition_id, value)
+FROM 'C:\Users\AviyaTsabari\DB_8570_1828\groceries_nutrition.csv'
+DELIMITER ','
+CSV HEADER;
