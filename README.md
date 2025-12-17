@@ -749,5 +749,10 @@ ERD + DSD של בסיס הנתונים המאוחד
 
   <img width="598" height="466" alt="צילום מסך 2025-12-17 164120" src="https://github.com/user-attachments/assets/e1bd571a-91e8-4fe0-b08b-9730cdb28efb" />
 
+  זריקת חריגה עבור סל שלא קיים:
+
+  <img width="573" height="135" alt="image" src="https://github.com/user-attachments/assets/f0796be0-6828-447b-982c-eba5bb42ffba" />
+
+
   
 
