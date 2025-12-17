@@ -832,6 +832,45 @@ fix_courier_city_mismatch() הפרוצדורה:
 
 <img width="605" height="742" alt="צילום מסך 2025-12-17 193511" src="https://github.com/user-attachments/assets/f6b1db43-a905-4bdc-a332-4d4a90bb42c6" />
 
+טריגרים:
+
+טריגר זה מתעד שינויים בסטטוס של סלי מזון לצורך מעקב ובקרה.
+
+בכל עדכון של עמודת status בטבלת foodbasket, הטריגר מופעל ורושם לטבלת תיעוד ייעודית את מזהה הסל, הסטטוס הקודם, הסטטוס החדש ותאריך השינוי.
+
+הטריגר עושה שימוש במשתני OLD ו־NEW, ומופעל רק כאשר הסטטוס אכן משתנה, תוך שמירה על שלמות הנתונים וללא השפעה על תהליך העדכון עצמו.
+
+קוד הפונקציה והטריגר:
+    
+    --פונקציה שרושמת ביומן רשומה של העדכון שהתבצע
+    CREATE OR REPLACE FUNCTION log_foodbasket_status_change()
+    RETURNS TRIGGER
+    LANGUAGE plpgsql
+    AS $$
+    BEGIN
+        -- נרשם רק אם הסטטוס באמת השתנה
+        IF OLD.status IS DISTINCT FROM NEW.status THEN
+            INSERT INTO foodbasket_status_log
+            (foodbasket_id, old_status, new_status)
+            VALUES
+            (OLD.foodbasket_id, OLD.status, NEW.status);
+        END IF;
+    
+        RETURN NEW;
+    END;
+    $$;
+    
+    -- בכל פעם שמתעדכן סטטוס של סל log_foodbasket_status_change טריגר שמפעיל את הפונקציה
+    CREATE TRIGGER trg_log_foodbasket_status_change
+    AFTER UPDATE OF status
+    ON foodbasket
+    FOR EACH ROW
+    EXECUTE FUNCTION log_foodbasket_status_change();
+
+דוגמת הרצה:
+<img width="1027" height="413" alt="צילום מסך 2025-12-17 200356" src="https://github.com/user-attachments/assets/93cb421c-b765-4170-a8be-50e744af011c" />
+
+<img width="925" height="492" alt="image" src="https://github.com/user-attachments/assets/8fdf4e96-ff8e-4d7d-89a4-4b37038396cc" />
 
 
 
