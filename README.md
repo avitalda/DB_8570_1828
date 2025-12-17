@@ -653,4 +653,97 @@ ERD + DSD של בסיס הנתונים המאוחד
 <img width="532" height="513" alt="image (6)" src="https://github.com/user-attachments/assets/4b0c9249-5219-4af0-a179-c260a2948b44" />
 
 
+<h2><span style="background-color: yellow;"> שלב ד: כתיבת תוכניות</span></h2>
+
+פונקציה זו מחשבת ציון איכות תזונתי לסל מזון על בסיס המוצרים הכלולים בו והערכים התזונתיים שלהם.
+
+הפונקציה עוברת על כל המוצרים בסל באמצעות cursor מפורש, ושולפת עבור כל מוצר את ערכי הקלוריות, החלבון, השומן והפחמימות מטבלת groceries_nutrition.
+
+לאחר שליפת הנתונים, הפונקציה מפחיתה נקודות מציון התחלתי בהתאם לכללים מוגדרים.
+
+חישוב הציון מתבצע באופן שונה עבור:
+
+מוצרים בסיסיים (type = 'B')
+
+מוצרי ארוחה (type = 'M')
+
+הפלט הוא ציון מספרי בין 0 ל־10, המייצג את איכות הסל מבחינה תזונתית.
+
+קוד הפונקציה:
+
+    CREATE OR REPLACE FUNCTION basket_quality_score(
+    	p_foodbasket_id integer)
+        RETURNS numeric
+        LANGUAGE 'plpgsql'
+        COST 100
+        VOLATILE PARALLEL UNSAFE
+    AS $BODY$
+    DECLARE
+      v_score numeric := 10;
+    
+      r record;
+      v_cal numeric;
+      v_pro numeric;
+      v_fat numeric;
+      v_carb numeric;
+    
+    --טוען את כל המוצרים שבסל
+      cur CURSOR FOR
+        SELECT g.groceries_id, g.type
+        FROM foodbasket_groceries fg
+        JOIN groceries g ON g.groceries_id = fg.groceries_id
+        WHERE fg.foodbasket_id = p_foodbasket_id;
+    BEGIN
+      -- סל חייב להתקיים
+      IF NOT EXISTS (SELECT 1 FROM foodbasket WHERE foodbasket_id = p_foodbasket_id) THEN
+        RAISE EXCEPTION 'foodbasket_id % not found', p_foodbasket_id;
+      END IF;
+    
+      OPEN cur;
+      LOOP
+        FETCH cur INTO r;
+        EXIT WHEN NOT FOUND;
+
+    -- להביא ערכים תזונתיים של המוצר (אם חסר ערך -> יהיה NULL)
+    SELECT
+      MAX(CASE WHEN nutrition_id = 1 THEN value END), -- Calories
+      MAX(CASE WHEN nutrition_id = 2 THEN value END), -- Protein
+      MAX(CASE WHEN nutrition_id = 3 THEN value END), -- Fat
+      MAX(CASE WHEN nutrition_id = 4 THEN value END)  -- Carbs
+    INTO v_cal, v_pro, v_fat, v_carb
+    FROM groceries_nutrition
+    WHERE groceries_id = r.groceries_id;
+
+    -- type = 'B' (בסיסי)
+    IF r.type = 'B' THEN
+      IF v_fat IS NOT NULL AND v_fat > 150 THEN v_score := v_score - 1; END IF;
+      IF v_cal IS NOT NULL AND v_cal > 25  THEN v_score := v_score - 1; END IF;
+      IF v_pro IS NOT NULL AND v_pro < 100 THEN v_score := v_score - 1; END IF;
+      IF v_carb IS NOT NULL AND v_carb > 30 THEN v_score := v_score - 1; END IF;
+
+    -- type = 'M' (ארוחה)
+    ELSIF r.type = 'M' THEN
+      IF v_pro  IS NOT NULL AND v_pro  < 30 THEN v_score := v_score - 1; END IF;
+      IF v_cal  IS NOT NULL AND v_cal  > 50 THEN v_score := v_score - 1; END IF;
+      IF v_fat  IS NOT NULL AND v_fat  > 70 THEN v_score := v_score - 1; END IF;
+      IF v_carb IS NOT NULL AND v_carb < 30 THEN v_score := v_score - 1; END IF;
+    END IF;
+
+    END LOOP;
+    CLOSE cur;
+    -- גבולות: 0..10
+
+
+    IF v_score < 0 THEN v_score := 0; END IF;
+    IF v_score > 10 THEN v_score := 10; END IF;
+  
+    RETURN v_score;
+    END;
+    $BODY$;
+
+  דוגמת הרצה:
+
+  <img width="598" height="466" alt="צילום מסך 2025-12-17 164120" src="https://github.com/user-attachments/assets/e1bd571a-91e8-4fe0-b08b-9730cdb28efb" />
+
+  
 
