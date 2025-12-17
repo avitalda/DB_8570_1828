@@ -12,7 +12,7 @@ FROM 'C:\Users\AviyaTsabari\DB_8570_1828\groceries_nutrition.csv'
 DELIMITER ','
 CSV HEADER;
 
---הוספת טבלת תיעוד עבור הטריגר
+--הוספת טבלת יומן תיעוד עבור עדכון סטטוס סל 
 CREATE TABLE foodbasket_status_log (
     log_id SERIAL PRIMARY KEY,
     foodbasket_id INT NOT NULL,
