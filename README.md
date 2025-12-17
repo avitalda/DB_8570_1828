@@ -753,6 +753,85 @@ ERD + DSD של בסיס הנתונים המאוחד
 
   <img width="573" height="135" alt="image" src="https://github.com/user-attachments/assets/f0796be0-6828-447b-982c-eba5bb42ffba" />
 
+fix_courier_city_mismatch() הפרוצדורה:
 
-  
+פרוצדורה זו מבצעת בדיקת התאמה בין שליחים למשפחות ומתקנת הקצאות שגויות של שליחים לסלי מזון.
+
+הפרוצדורה עוברת על כל הסלים שלא נשלחו ובודקת האם השליח המשויך לכל סל מתגורר באותה עיר של המשפחה המקבלת את הסל.
+
+במקרה של אי־התאמה, הפרוצדורה מחפשת שליח אחר המתגורר בעיר המשפחה ומעדכנת את הסל בהתאם.
+
+קוד הפרוצדורה:
+
+    CREATE OR REPLACE PROCEDURE fix_courier_city_mismatch()
+    LANGUAGE plpgsql
+    AS $$
+    DECLARE
+      r record;
+      v_new_courier_id int;
+    
+      cur CURSOR FOR
+        SELECT
+          b.foodbasket_id,
+          b.courier_id,
+          f.city_id AS family_city_id,
+          c.city_id AS courier_city_id
+        FROM foodbasket b
+        JOIN family f  ON f.family_id = b.family_id
+        JOIN courier c ON c.courier_id = b.courier_id
+        WHERE b.family_id IS NOT NULL
+          AND b.courier_id IS NOT NULL
+          AND b.status <> 'delivered';  -- לא נוגעים בסלים שנשלחו
+    BEGIN
+      OPEN cur;
+    
+      LOOP
+        FETCH cur INTO r;
+        EXIT WHEN NOT FOUND;
+
+    BEGIN
+      -- אם השליח כבר גר בעיר של המשפחה – אין מה לעשות
+      IF r.family_city_id = r.courier_city_id THEN
+        CONTINUE;
+      END IF;
+
+      -- חיפוש שליח שגר בעיר של המשפחה
+      SELECT courier_id
+      INTO v_new_courier_id
+      FROM courier
+      WHERE city_id = r.family_city_id
+      ORDER BY courier_id
+      LIMIT 1;
+
+
+      -- אם נמצא שליח מתאים – מעדכנים את הסל
+      IF v_new_courier_id IS NOT NULL THEN
+        UPDATE foodbasket
+        SET courier_id = v_new_courier_id
+        WHERE foodbasket_id = r.foodbasket_id;
+      END IF;
+
+    EXCEPTION WHEN OTHERS THEN
+      -- מדלגים על סל בעייתי וממשיכים
+      RAISE NOTICE 'Basket % skipped due to error: %',
+        r.foodbasket_id, SQLERRM;
+    END;
+    END LOOP;
+
+    CLOSE cur;
+    END;
+    $$;
+
+לפני הרצה:
+
+השאילתה סופרת כמה סלים יש שאין התאמה בין עיר השליח לבין עיר המשפחה וגם קיים שליח בעיר של המשפחה.
+
+<img width="627" height="651" alt="צילום מסך 2025-12-17 193410" src="https://github.com/user-attachments/assets/1ae423d6-3b93-429d-958d-318c32041a43" />
+
+אחרי הרצה:
+
+<img width="605" height="742" alt="צילום מסך 2025-12-17 193511" src="https://github.com/user-attachments/assets/f6b1db43-a905-4bdc-a332-4d4a90bb42c6" />
+
+
+
 
