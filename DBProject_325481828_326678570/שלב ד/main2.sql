@@ -93,7 +93,7 @@ DECLARE
     JOIN courier c ON c.courier_id = b.courier_id
     WHERE b.family_id IS NOT NULL
       AND b.courier_id IS NOT NULL
-      AND b.status <> 'delivered';  -- לא נוגעים בסלים שנשלחו
+      AND b.status <> 'delivered';
 BEGIN
   OPEN cur;
 
@@ -102,12 +102,12 @@ BEGIN
     EXIT WHEN NOT FOUND;
 
     BEGIN
-      -- אם השליח כבר גר בעיר של המשפחה – אין מה לעשות
+      -- אם השליח כבר תואם לעיר המשפחה – ממשיכים
       IF r.family_city_id = r.courier_city_id THEN
         CONTINUE;
       END IF;
 
-      -- חיפוש שליח שגר בעיר של המשפחה
+      -- חיפוש שליח בעיר של המשפחה
       SELECT courier_id
       INTO v_new_courier_id
       FROM courier
@@ -115,17 +115,18 @@ BEGIN
       ORDER BY courier_id
       LIMIT 1;
 
-
-      -- אם נמצא שליח מתאים – מעדכנים את הסל
-      IF v_new_courier_id IS NOT NULL THEN
+      -- אם לא נמצא שליח מתאים – הדפסה וממשיכים
+      IF v_new_courier_id IS NULL THEN
+        RAISE NOTICE 'No suitable courier found for basket %', r.foodbasket_id;
+      ELSE
+        -- נמצא שליח מתאים – מעדכנים
         UPDATE foodbasket
         SET courier_id = v_new_courier_id
         WHERE foodbasket_id = r.foodbasket_id;
       END IF;
 
     EXCEPTION WHEN OTHERS THEN
-      -- מדלגים על סל בעייתי וממשיכים
-      RAISE NOTICE 'Basket % skipped due to error: %',
+      RAISE NOTICE 'For basket %: skipped due to error: %',
         r.foodbasket_id, SQLERRM;
     END;
   END LOOP;
@@ -134,8 +135,9 @@ BEGIN
 END;
 $$;
 
+
 --   תוכנית ראשית המזמנת את הפונקציה והפרוצדורה לעיל
-CREATE OR REPLACE PROCEDURE main_program()
+CREATE OR REPLACE PROCEDURE main2()
 LANGUAGE plpgsql
 AS $$
 DECLARE
