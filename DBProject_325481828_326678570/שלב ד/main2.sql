@@ -151,6 +151,7 @@ BEGIN
   FOR r IN
     SELECT foodbasket_id
     FROM foodbasket
+	ORDER BY foodbasket_id ASC
   LOOP
     v_score := basket_quality_score(r.foodbasket_id);
 
