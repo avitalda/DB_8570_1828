@@ -858,6 +858,7 @@ fix_courier_city_mismatch() הפרוצדורה:
       FOR r IN
         SELECT foodbasket_id
         FROM foodbasket
+        ORDER BY foodbasket_id ASC
       LOOP
         v_score := basket_quality_score(r.foodbasket_id);
     
@@ -872,7 +873,8 @@ fix_courier_city_mismatch() הפרוצדורה:
 
 <img width="652" height="348" alt="צילום מסך 2025-12-18 101008" src="https://github.com/user-attachments/assets/cf90f468-6b3d-4ce3-b577-29193928c769" />
 
-<img width="437" height="472" alt="image" src="https://github.com/user-attachments/assets/bc2f42e6-7e6c-4d3a-9a8e-44ea3dcb0549" />
+<img width="522" height="322" alt="image" src="https://github.com/user-attachments/assets/a1d75bd2-80df-4d4b-9ad0-5017af78b954" />
+
 
 <img width="633" height="402" alt="image" src="https://github.com/user-attachments/assets/91e58fe1-1c0f-484c-b455-f6a8c57f67bf" />
 
