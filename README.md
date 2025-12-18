@@ -837,6 +837,7 @@ fix_courier_city_mismatch() הפרוצדורה:
 <img width="605" height="742" alt="צילום מסך 2025-12-17 193511" src="https://github.com/user-attachments/assets/f6b1db43-a905-4bdc-a332-4d4a90bb42c6" />
 
 דוגמה עם הדפסה של אי מציאת שליח מתאים:
+
 <img width="477" height="232" alt="image" src="https://github.com/user-attachments/assets/6a4dbc05-ba9c-4aa4-b60a-c952b7364056" />
 
 
