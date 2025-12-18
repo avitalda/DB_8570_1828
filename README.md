@@ -761,6 +761,8 @@ fix_courier_city_mismatch() הפרוצדורה:
 
 במקרה של אי־התאמה, הפרוצדורה מחפשת שליח אחר המתגורר בעיר המשפחה ומעדכנת את הסל בהתאם.
 
+בנוסף, אם לא נמצא שליח מתאים, הפרוצדורה מדפיסה הודעת חריגה (רק מדפיסה ולא יוצאת =RAISE NOTICE) שעבור סל X לא נמצא שליח מתאים.
+
 קוד הפרוצדורה:
 
     CREATE OR REPLACE PROCEDURE fix_courier_city_mismatch()
@@ -781,7 +783,7 @@ fix_courier_city_mismatch() הפרוצדורה:
         JOIN courier c ON c.courier_id = b.courier_id
         WHERE b.family_id IS NOT NULL
           AND b.courier_id IS NOT NULL
-          AND b.status <> 'delivered';  -- לא נוגעים בסלים שנשלחו
+          AND b.status <> 'delivered';
     BEGIN
       OPEN cur;
     
@@ -790,12 +792,12 @@ fix_courier_city_mismatch() הפרוצדורה:
         EXIT WHEN NOT FOUND;
 
     BEGIN
-      -- אם השליח כבר גר בעיר של המשפחה – אין מה לעשות
+      -- אם השליח כבר תואם לעיר המשפחה – ממשיכים
       IF r.family_city_id = r.courier_city_id THEN
         CONTINUE;
       END IF;
 
-      -- חיפוש שליח שגר בעיר של המשפחה
+      -- חיפוש שליח בעיר של המשפחה
       SELECT courier_id
       INTO v_new_courier_id
       FROM courier
@@ -803,24 +805,26 @@ fix_courier_city_mismatch() הפרוצדורה:
       ORDER BY courier_id
       LIMIT 1;
 
-
-      -- אם נמצא שליח מתאים – מעדכנים את הסל
-      IF v_new_courier_id IS NOT NULL THEN
+      -- אם לא נמצא שליח מתאים – הדפסה וממשיכים
+      IF v_new_courier_id IS NULL THEN
+        RAISE NOTICE 'No suitable courier found for basket %', r.foodbasket_id;
+      ELSE
+        -- נמצא שליח מתאים – מעדכנים
         UPDATE foodbasket
         SET courier_id = v_new_courier_id
         WHERE foodbasket_id = r.foodbasket_id;
       END IF;
 
     EXCEPTION WHEN OTHERS THEN
-      -- מדלגים על סל בעייתי וממשיכים
-      RAISE NOTICE 'Basket % skipped due to error: %',
+      RAISE NOTICE 'For basket %: skipped due to error: %',
         r.foodbasket_id, SQLERRM;
     END;
-    END LOOP;
-
-    CLOSE cur;
+      END LOOP;
+    
+      CLOSE cur;
     END;
     $$;
+
 
 לפני הרצה:
 
@@ -831,6 +835,45 @@ fix_courier_city_mismatch() הפרוצדורה:
 אחרי הרצה:
 
 <img width="605" height="742" alt="צילום מסך 2025-12-17 193511" src="https://github.com/user-attachments/assets/f6b1db43-a905-4bdc-a332-4d4a90bb42c6" />
+
+דוגמה עם הדפסה של אי מציאת שליח מתאים:
+<img width="477" height="232" alt="image" src="https://github.com/user-attachments/assets/6a4dbc05-ba9c-4aa4-b60a-c952b7364056" />
+
+
+
+תוכנית ראשית main2 המזמנת את הפונקציה והפרוצדורה לעיל:
+
+    CREATE OR REPLACE PROCEDURE main2()
+    LANGUAGE plpgsql
+    AS $$
+    DECLARE
+      r record;
+      v_score numeric;
+    BEGIN
+      -- זימון הפרוצדורה
+      CALL fix_courier_city_mismatch();
+    
+      -- זימון הפונקציה עבור כל סל
+      FOR r IN
+        SELECT foodbasket_id
+        FROM foodbasket
+      LOOP
+        v_score := basket_quality_score(r.foodbasket_id);
+    
+        -- הדפסה בלבד
+        RAISE NOTICE 'For basket %: quality score = %',
+          r.foodbasket_id, v_score;
+      END LOOP;
+    END;
+    $$;
+
+דוגמת הרצה:
+
+<img width="652" height="348" alt="צילום מסך 2025-12-18 101008" src="https://github.com/user-attachments/assets/cf90f468-6b3d-4ce3-b577-29193928c769" />
+
+<img width="437" height="472" alt="image" src="https://github.com/user-attachments/assets/bc2f42e6-7e6c-4d3a-9a8e-44ea3dcb0549" />
+
+<img width="633" height="402" alt="image" src="https://github.com/user-attachments/assets/91e58fe1-1c0f-484c-b455-f6a8c57f67bf" />
 
 טריגרים:
 
