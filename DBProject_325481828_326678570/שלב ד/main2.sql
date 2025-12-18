@@ -134,4 +134,28 @@ BEGIN
 END;
 $$;
 
+--   תוכנית ראשית המזמנת את הפונקציה והפרוצדורה לעיל
+CREATE OR REPLACE PROCEDURE main_program()
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  r record;
+  v_score numeric;
+BEGIN
+  -- זימון הפרוצדורה
+  CALL fix_courier_city_mismatch();
+
+  -- זימון הפונקציה עבור כל סל
+  FOR r IN
+    SELECT foodbasket_id
+    FROM foodbasket
+  LOOP
+    v_score := basket_quality_score(r.foodbasket_id);
+
+    -- הדפסה בלבד
+    RAISE NOTICE 'For basket %: quality score = %',
+      r.foodbasket_id, v_score;
+  END LOOP;
+END;
+$$;
 
