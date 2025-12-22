@@ -823,6 +823,64 @@ ERD + DSD של בסיס הנתונים המאוחד
 <img width="865" height="272" alt="image" src="https://github.com/user-attachments/assets/185f2a5f-c0df-490c-a7e3-e4510052a4f5" />
 
 
+תוכנית ראשית:
+
+--תוכנית ראשית שמזמנת פונקציה ופרוצדורה
+
+      DO $$
+      
+      DECLARE
+      
+          cur REFCURSOR;				--עבור פונקציה
+         
+          r RECORD;					--עבור פונקציה
+      	 
+         v_courier_id INT := 3;		-- עבור פרוצדורה, מזהה מתנדב לדוגמא
+     
+      BEGIN
+      
+      
+      	-- קריאה לפרוצדורה
+      	RAISE NOTICE 'Calculating bonus for courier %', v_courier_id;
+         
+          CALL calculate_courier_bonus(v_courier_id);
+      
+      	-- קריאה לפונקציה
+         
+          cur := rank_couriers_by_baskets();
+      
+          
+          LOOP
+              
+              FETCH cur INTO r;
+             
+              EXIT WHEN NOT FOUND;
+      
+              
+              RAISE NOTICE 
+                 
+                  'Courier % % : % baskets',
+      			
+            r.courier_id,
+                
+                  r.courier_name,
+                 
+                  r.foodbasket_count;
+          
+          END LOOP;
+      
+         
+          CLOSE cur;
+      
+      END;
+     
+      $$;
+
+דוגמת הרצה:
+
+<img width="659" height="783" alt="image" src="https://github.com/user-attachments/assets/09cd0629-57d4-4256-ab22-27edf2c0770b" />
+
+(2 השורות הראשונות הן של פלט הפרוצדורה, ושאר השורות הן פלט של הפונקציה)
 
 **התוכנית main2:**
 
@@ -1049,6 +1107,8 @@ fix_courier_city_mismatch() הפרוצדורה:
 
 **טריגרים:**
 
+טריגר 1:
+
 טריגר זה מתעד שינויים בסטטוס של סלי מזון לצורך מעקב ובקרה.
 
 בכל עדכון של עמודת status בטבלת foodbasket, הטריגר מופעל ורושם לטבלת תיעוד ייעודית את מזהה הסל, הסטטוס הקודם, הסטטוס החדש ותאריך השינוי.
@@ -1087,5 +1147,90 @@ fix_courier_city_mismatch() הפרוצדורה:
 
 <img width="925" height="492" alt="image" src="https://github.com/user-attachments/assets/8fdf4e96-ff8e-4d7d-89a4-4b37038396cc" />
 
+
+טריגר 2:
+
+טריגר שמדרג את השליחים אוטומטית אחרי כל חלוקת סל – כלומר, בכל פעם שמתווסף או מתעדכן סל עם שליח, הטבלה שתכיל את הדירוג מתעדכנת.
+
+(בשביל הטריגר הזה, היינו צריכות להוסיף טבלה ששומרת את דירוש העובדים לפי מספר הסלים. בנוסף, כדי שהטבלה תהיה מלאה בכל הנתונים ולא רק עבור העובדין שהוסף להם סל- כתבנו פונקציה נוספת שמלאה את הטבלה (מאחר ואת הטריגר עשינו רק אחרי שכתבנו את הפונקציות) הפונקציה נמצאת הקובץ ההוספות עבור שלב זה.)
+
+הקוד של הפונקציה שמעדכנת את הטבלה:
+
+      CREATE OR REPLACE FUNCTION update_courier_ranking()
+      
+      RETURNS TRIGGER
+      
+      LANGUAGE plpgsql
+      
+      AS $$
+      
+      
+      BEGIN
+      
+      	-- מחיקת הרשומות הישנות
+      	DELETE FROM courier_ranking WHERE courier_id = NEW.courier_id;
+        
+      
+      	-- הוספת הדירוג המעודכן
+      	INSERT INTO courier_ranking(courier_id, courier_name, foodbasket_count)
+        
+      	SELECT
+        
+      		c.courier_id,
+          
+      		c.courier_name,
+          
+      		count (f.foodbasket_id) 
+          
+      	FROM courier c
+        
+      	LEFT JOIN foodbasket f
+        
+      		  ON c.courier_id = f.courier_id 
+            
+      	WHERE c.courier_id = NEW.courier_id
+        
+      	GROUP BY c.courier_id, c.courier_name;
+        
+         
+         RETURN NEW;
+         
+      END;
+      
+      $$
+
+     הטריגר שמפעיל את הפונקציה update_courier_ranking בכל פעם שמתבצע שיוך של עובד לסל:
+           
+      CREATE TRIGGER trg_update_courier_ranking
+      
+      AFTER INSERT OR UPDATE ON foodbasket
+      
+      FOR EACH ROW
+      
+      EXECUTE FUNCTION update_courier_ranking();
+      
+
+הוזפת נתונים עבור סלים, כדי שיופעל הטריגר:
+
+
+      INSERT INTO foodbasket   
+      
+          (foodbasket_id, kind, status, basketweight, family_id, courier_id, dateofrecepit)
+          
+      VALUES 
+      
+          (2000, 'restaurant', 'pending', 10.5, 1, 1, NULL);
+
+
+דוגמת הרצה:
+
+לפני הפעלת הטריגר:
+
+<img width="865" height="342" alt="image" src="https://github.com/user-attachments/assets/896a1974-949d-4822-9736-fdae49e7524a" />
+
+
+אחרי הפעלת הטריגר:
+
+<img width="865" height="386" alt="image" src="https://github.com/user-attachments/assets/e2e0e776-5cf9-46f9-9901-1f69ed7e36a5" />
 
 
