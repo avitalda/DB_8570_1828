@@ -723,6 +723,106 @@ ERD + DSD של בסיס הנתונים המאוחד
 קוד הפרוצדורה:
 
 
+      
+      CREATE OR REPLACE PROCEDURE calculate_courier_bonus( IN p_courier_id int)
+      
+      LANGUAGE plpgsql
+      
+      AS $$
+      
+      DECLARE
+      
+      	p_salary TEXT;
+        
+      	p_foodbasket_count INT;
+        
+      	p_bonus NUMERIC(10,2);
+        
+      	
+      BEGIN
+      
+      	SELECT salary
+        
+      	INTO p_salary
+        
+      	FROM courier 
+        
+      	WHERE courier_id = p_courier_id; 
+        
+      	-- בדיקה האם העובד קיים במאגר
+        
+      
+        IF NOT FOUND THEN
+        
+      			RAISE EXCEPTION 'courier % dosenwt exist', p_courier_id;
+            
+      	END IF;
+        
+      
+      	-- בדיקה האם עובד מקבל משכורת או לא
+        
+      	IF p_salary <> 'N' THEN 
+        
+      		RAISE NOTICE 'courier % received salary- no bonuse', p_courier_id;
+          
+      	-- בדיקה כמה סלים המתנדב חילק
+        
+      	ELSE
+        
+      		SELECT COUNT(*)
+          
+      		INTO p_foodbasket_count
+          
+      		FROM foodbasket
+          
+      		WHERE courier_id = p_courier_id AND dateofrecepit <= CURRENT_DATE;
+          
+      
+      		--חישוב מענק
+          
+      		p_bonus := p_foodbasket_count * 10;
+      
+      		--עדכון המענק בטבלת העובדים
+      		UPDATE courier 
+          
+      		SET bonus = p_bonus
+          
+      		WHERE courier_id = p_courier_id;
+          
+      
+      		RAISE NOTICE 'courier % received bonuse', p_courier_id;
+          
+      		
+      	END IF;
+      -- טיפול בשגיאות
+      
+      EXCEPTION
+      
+      	WHEN OTHERS THEN
+        
+      		ROLLBACK;
+          
+      		RAISE NOTICE 'ERROR: %', SQLERRM;
+          
+      
+      END;
+      
+      $$;
+
+דוגמת הרצה:
+
+<img width="865" height="325" alt="image" src="https://github.com/user-attachments/assets/9bddabf7-37dc-40dc-a9c5-7a04c4fc0b22" />
+
+בסיס הנתונים לפני ההרצה:
+
+ <img width="865" height="275" alt="image" src="https://github.com/user-attachments/assets/a123e013-fa27-4c98-af70-a34740ba48b5" />
+
+
+בסיס הנתונים לאחר ההרצה:
+
+<img width="865" height="272" alt="image" src="https://github.com/user-attachments/assets/185f2a5f-c0df-490c-a7e3-e4510052a4f5" />
+
+
 
 **התוכנית main2:**
 
