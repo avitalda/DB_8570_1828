@@ -2,6 +2,14 @@
 ALTER TABLE courier
 ADD COLUMN bonus NUMERIC(10,2) DEFAULT 0;
 
+
+--טבלת דירוג עובדים, ע"פ מס הסלים שהם חילקו
+CREATE TABLE courier_ranking (
+    courier_id INT PRIMARY KEY,
+    courier_name TEXT,
+    foodbasket_count INT
+);
+
 --מחיקת הערכים התזונתיים של מוצרי הבסיס
 delete from groceries_nutrition
 where groceries_id <401
