@@ -20,6 +20,10 @@
 - [חלק ג](#-חלק-ג)
   - [אינטגרציה](#-אינצגרציה)
   - [מבטים](#-מבטים)
+- [חלק ד](#-חלק-ד)
+  - [תוכנית ראשית 1, כולל פונקציה ופרוצדורה](#-תוכנית-ראשית-1-כולל-פונקציה-ופרוצדורה)
+  - [תוכנית ראשית 2, כולל פונקציה ופרוצדורה](#-תוכנית-ראשית-2-כולל-פונקציה-ופרוצדורה)
+  - [טריגרים](#-טריגרים)
   - 
 
 נושא: חלוקת סלי מזון  
@@ -655,7 +659,72 @@ ERD + DSD של בסיס הנתונים המאוחד
 
 <h2><span style="background-color: yellow;"> שלב ד: כתיבת תוכניות</span></h2>
 
-התוכנית main2:
+
+**התוכנית main1:**
+
+הפונקציה rank_couriers_by_baskets:
+
+פונקציה זו מחזירה דירוג של כל השליחים (couriers) לפי מספר הסלים (foodbaskets) שחילקו בשנה האחרונה. 
+
+הפונקציה עושה שימוש ב־LEFT JOIN כדי לכלול גם שליחים שלא חילקו אף סל בשנה האחרונה.
+
+קוד הפונקציה:
+
+
+
+      CREATE OR REPLACE FUNCTION rank_couriers_by_baskets() 
+      
+      RETURNS REFCURSOR
+      
+      LANGUAGE plpgsql
+      
+      AS $$
+      
+      DECLARE
+      
+          ref REFCURSOR;
+          
+      BEGIN
+      
+          OPEN ref FOR
+          
+              SELECT
+              
+      			c.courier_id,
+            
+      			c.courier_name,
+            
+      			count (f.foodbasket_id) AS foodbasket_count
+            
+      		FROM courier c
+          
+      		LEFT JOIN foodbasket f
+          
+      			  ON c.courier_id = f.courier_id AND f.dateofrecepit <= CURRENT_DATE
+              
+      		GROUP BY c.courier_id, c.courier_name
+          
+      		ORDER BY foodbasket_count DESC;
+          
+         
+         RETURN ref;
+         
+      END;
+      
+      $$
+
+פלט לאחר הרצה: <img width="865" height="496" alt="image" src="https://github.com/user-attachments/assets/16ac0fb1-beee-4585-80b9-db54dfcf729d" />
+ 
+
+הפרוצדורה calculate_courier_bonus:
+
+מקבלת מזהה של עובד, בודקת האם הוא מקבל משכורת, ואם לא – מחשבת את מספר סלי המזון שחילק בשנה האחרונה ומעניקה לו מענק בהתאם.
+
+קוד הפרוצדורה:
+
+
+
+**התוכנית main2:**
 
 הפונקציה basket_quality_score:
 
@@ -878,7 +947,7 @@ fix_courier_city_mismatch() הפרוצדורה:
 
 <img width="633" height="402" alt="image" src="https://github.com/user-attachments/assets/91e58fe1-1c0f-484c-b455-f6a8c57f67bf" />
 
-טריגרים:
+**טריגרים:**
 
 טריגר זה מתעד שינויים בסטטוס של סלי מזון לצורך מעקב ובקרה.
 
