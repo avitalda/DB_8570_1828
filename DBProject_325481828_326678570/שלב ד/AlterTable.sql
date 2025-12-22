@@ -1,4 +1,4 @@
-
+-- הוספת עמודת "בונוס" בטבלת "עובדים" 
 ALTER TABLE courier
 ADD COLUMN bonus NUMERIC(10,2) DEFAULT 0;
 
