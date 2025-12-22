@@ -44,11 +44,6 @@ VALUES
     (2000, 'restaurant', 'pending', 10.5, 1, 1, NULL);
 
 
-
-
-
-
-
 --מחיקת הערכים התזונתיים של מוצרי הבסיס
 delete from groceries_nutrition
 where groceries_id <401
