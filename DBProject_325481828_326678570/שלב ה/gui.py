@@ -7,9 +7,9 @@ try:
     conn = psycopg2.connect(
         host="localhost",
         port=5432,
-        database="stage3",
+        database="FoodDelivery",
         user="postgres",
-        password="puxydrh"
+        password="1234"
     )
     cur = conn.cursor()
 except Exception as e:
@@ -254,7 +254,242 @@ def show_admin_window():
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
-    tk.Button(center_frame, text="➕ Add Food Basket", command=add_foodbasket, **button_style).grid(row=0, column=0,
+
+    def baskets_management():
+        def open_add_basket(parent_window):
+            parent_window.destroy()
+            add_foodbasket()
+
+        def delete_basket():
+            delete_window = tk.Toplevel(admin_window)
+            delete_window.title("Delete Basket")
+            set_half_screen(delete_window)
+
+            header_frame = tk.Frame(delete_window, bg=COLORS['danger'], height=60)
+            header_frame.pack(fill=tk.X)
+            header_frame.pack_propagate(False)
+
+            tk.Label(header_frame, text="🗑️ Delete Basket", font=FONTS['subheader'],
+                     bg=COLORS['danger'], fg=COLORS['light']).pack(pady=15)
+
+            form_frame = tk.Frame(delete_window, bg=COLORS['bg_main'])
+            form_frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
+
+            tk.Label(form_frame, text="Foodbasket ID:", font=FONTS['text'],
+                     bg=COLORS['bg_main'], fg=COLORS['text_dark']).pack(pady=(10, 5))
+
+            basket_id_entry = tk.Entry(form_frame, font=FONTS['text'], width=25,
+                                       relief=tk.FLAT, bg=COLORS['light'])
+            basket_id_entry.pack(pady=(0, 15))
+
+            def do_delete():
+                basket_id = basket_id_entry.get().strip()
+                if not basket_id.isdigit():
+                    messagebox.showerror("Error", "Please enter a valid numeric foodbasket_id.")
+                    return
+
+                try:
+                    cur.execute("SELECT 1 FROM foodbasket WHERE foodbasket_id = %s", (int(basket_id),))
+                    if cur.fetchone() is None:
+                        messagebox.showinfo("Delete Basket", f"Basket {basket_id} not found.")
+                        return
+
+                    cur.execute("DELETE FROM foodbasket WHERE foodbasket_id = %s", (int(basket_id),))
+                    conn.commit()
+                    messagebox.showinfo("Success", f"Basket {basket_id} deleted successfully.")
+                    delete_window.destroy()
+                except Exception as e:
+                    conn.rollback()
+                    messagebox.showerror("Error", f"Database error:\n{str(e)}")
+
+            tk.Button(form_frame, text="Delete", command=do_delete, width=16, font=FONTS['button'],
+                      bg=COLORS['danger'], fg=COLORS['light'], relief=tk.FLAT, cursor='hand2').pack(pady=5)
+
+        def open_delete_basket(parent_window):
+            parent_window.destroy()
+            delete_basket()
+
+        def basket_score():
+            score_window = tk.Toplevel(admin_window)
+            score_window.title("Basket Quality Score")
+            set_half_screen(score_window)
+
+            header_frame = tk.Frame(score_window, bg=COLORS['secondary'], height=60)
+            header_frame.pack(fill=tk.X)
+            header_frame.pack_propagate(False)
+
+            tk.Label(header_frame, text="⭐ Basket Quality Score", font=FONTS['subheader'],
+                     bg=COLORS['secondary'], fg=COLORS['light']).pack(pady=15)
+
+            form_frame = tk.Frame(score_window, bg=COLORS['bg_main'])
+            form_frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
+
+            tk.Label(form_frame, text="Foodbasket ID:", font=FONTS['text'],
+                     bg=COLORS['bg_main'], fg=COLORS['text_dark']).pack(pady=(10, 5))
+
+            basket_id_entry = tk.Entry(form_frame, font=FONTS['text'], width=25,
+                                       relief=tk.FLAT, bg=COLORS['light'])
+            basket_id_entry.pack(pady=(0, 15))
+
+            def calc_score():
+                basket_id = basket_id_entry.get().strip()
+                if not basket_id.isdigit():
+                    messagebox.showerror("Error", "Please enter a valid numeric foodbasket_id.")
+                    return
+                try:
+                    cur.execute("SELECT basket_quality_score(%s)", (int(basket_id),))
+                    res = cur.fetchone()
+                    if res is None:
+                        messagebox.showerror("Error", "No result returned from function.")
+                        return
+                    messagebox.showinfo("Basket Quality Score", f"For basket {basket_id}: quality score = {res[0]}")
+                except Exception as e:
+                    messagebox.showerror("Error", f"Database error:\n{str(e)}")
+
+            tk.Button(form_frame, text="Calculate", command=calc_score, width=16, font=FONTS['button'],
+                      bg=COLORS['secondary'], fg=COLORS['light'], relief=tk.FLAT, cursor='hand2').pack(pady=5)
+
+        def open_score_window(parent_window):
+            parent_window.destroy()
+            basket_score()
+
+        # ===== NEW: Update Basket (status) =====
+        def update_basket():
+            update_window = tk.Toplevel(admin_window)
+            update_window.title("Update Basket")
+            set_half_screen(update_window)
+
+            main_frame = tk.Frame(update_window, bg=COLORS['bg_main'])
+            main_frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
+
+            tk.Label(main_frame, text="✏️ Update Basket", font=FONTS['subheader'],
+                     bg=COLORS['bg_main'], fg=COLORS['primary']).pack(pady=20)
+
+            form_frame = tk.Frame(main_frame, bg=COLORS['bg_main'])
+            form_frame.pack(pady=10, anchor="center")
+
+            tk.Label(form_frame, text="Basket ID:", font=FONTS['label'],
+                     bg=COLORS['bg_main'], fg=COLORS['text_dark']).grid(row=0, column=0, sticky="w", pady=5)
+            entry_basket_id = tk.Entry(form_frame, font=FONTS['entry'], width=20,
+                                       relief=tk.FLAT, bg=COLORS['light'], borderwidth=2)
+            entry_basket_id.grid(row=0, column=1, pady=5, padx=5)
+
+            tk.Label(form_frame, text="Status:", font=FONTS['label'],
+                     bg=COLORS['bg_main'], fg=COLORS['text_dark']).grid(row=1, column=0, sticky="w", pady=5)
+
+            status_var = tk.StringVar(value="pending")
+            status_menu = tk.OptionMenu(form_frame, status_var, "pending", "delivered")
+            status_menu.config(font=FONTS['entry'], bg=COLORS['light'], fg=COLORS['text_dark'],
+                               relief=tk.FLAT, highlightthickness=0, borderwidth=0, width=18)
+            status_menu.grid(row=1, column=1, pady=5, padx=5, sticky="w")
+
+            def confirm_update():
+                basket_id = entry_basket_id.get().strip()
+                new_status = status_var.get().strip()
+
+                if not basket_id.isdigit():
+                    messagebox.showerror("Error", "Please enter a valid numeric Basket ID.")
+                    return
+
+                try:
+                    cur.execute("SELECT 1 FROM foodbasket WHERE foodbasket_id=%s", (int(basket_id),))
+                    if cur.fetchone() is None:
+                        messagebox.showerror("Error", f"Basket {basket_id} not found.")
+                        return
+
+                    cur.execute("UPDATE foodbasket SET status=%s WHERE foodbasket_id=%s",
+                                (new_status, int(basket_id)))
+                    conn.commit()
+                    messagebox.showinfo("Success", f"Basket {basket_id} updated successfully.")
+                    update_window.destroy()
+                    baskets_management()
+
+                except Exception as e:
+                    conn.rollback()
+                    messagebox.showerror("Error", f"Database error:\n{str(e)}")
+
+            button_frame = tk.Frame(main_frame, bg=COLORS['bg_main'])
+            button_frame.pack(side=tk.BOTTOM, anchor="e", pady=20, padx=20)
+            tk.Button(button_frame, text="Update", font=FONTS['button'], width=16,
+                      command=confirm_update, bg=COLORS['secondary'], fg=COLORS['light'],
+                      relief=tk.FLAT, cursor='hand2').pack()
+
+        def open_update_basket(parent_window):
+            parent_window.destroy()
+            update_basket()
+
+        try:
+            cur.execute("""
+                SELECT foodbasket_id, kind, status, basketweight, family_id, courier_id, dateofrecepit
+                FROM foodbasket
+                ORDER BY foodbasket_id ASC
+            """)
+            results = cur.fetchall()
+
+            result_window = tk.Toplevel(admin_window)
+            result_window.title("Baskets")
+            set_half_screen(result_window)
+
+            header_frame = tk.Frame(result_window, bg=COLORS['primary'], height=60)
+            header_frame.pack(fill=tk.X)
+            header_frame.pack_propagate(False)
+
+            tk.Label(header_frame, text="🧺 Baskets Management", font=FONTS['subheader'],
+                     bg=COLORS['primary'], fg=COLORS['light']).pack(pady=15)
+
+            button_frame = tk.Frame(result_window, bg=COLORS['bg_main'])
+            button_frame.pack(fill=tk.X, padx=20, pady=15)
+
+            btn_style = {"font": FONTS['button'], "relief": tk.FLAT, "cursor": "hand2", "width": 16}
+
+            tk.Button(button_frame, text="🗑️ Delete Basket", command=lambda: open_delete_basket(result_window),
+                      bg=COLORS['danger'], fg=COLORS['light'], **btn_style).pack(side=tk.LEFT, padx=5)
+
+            tk.Button(button_frame, text="➕ Add Basket", command=lambda: open_add_basket(result_window),
+                      bg=COLORS['success'], fg=COLORS['light'], **btn_style).pack(side=tk.LEFT, padx=5)
+
+            tk.Button(button_frame, text="✏️ Update Basket", command=lambda: open_update_basket(result_window),
+                      bg=COLORS['secondary'], fg=COLORS['light'], **btn_style).pack(side=tk.LEFT, padx=5)
+
+            tk.Button(button_frame, text="⭐ Score", command=lambda: open_score_window(result_window),
+                      bg=COLORS['dark'], fg=COLORS['light'], **btn_style).pack(side=tk.LEFT, padx=5)
+
+            text_frame = tk.Frame(result_window, bg=COLORS['bg_main'])
+            text_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=(0, 20))
+
+            scrollbar = tk.Scrollbar(text_frame)
+            scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+            text = tk.Text(text_frame, width=90, height=22, yscrollcommand=scrollbar.set,
+                           font=FONTS['text'], bg=COLORS['light'], fg=COLORS['text_dark'],
+                           relief=tk.FLAT, padx=15, pady=15)
+            text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+            scrollbar.config(command=text.yview)
+
+            header = (
+                f"{'ID'.ljust(8)}{'Kind'.ljust(10)}{'Status'.ljust(14)}"
+                f"{'Weight'.ljust(10)}{'Family'.ljust(10)}{'Courier'.ljust(10)}{'Receipt Date'.ljust(14)}\n"
+            )
+            text.insert(tk.END, header)
+            text.insert(tk.END, "-" * 80 + "\n")
+
+            for row in results:
+                fb_id = str(row[0]).ljust(8)
+                kind = str(row[1] if row[1] is not None else '').ljust(10)
+                status = str(row[2] if row[2] is not None else '').ljust(14)
+                weight = str(row[3] if row[3] is not None else '').ljust(10)
+                fam = str(row[4] if row[4] is not None else '').ljust(10)
+                cour = str(row[5] if row[5] is not None else '').ljust(10)
+                rec = str(row[6] if row[6] is not None else '').ljust(14)
+                text.insert(tk.END, f"{fb_id}{kind}{status}{weight}{fam}{cour}{rec}\n")
+
+            text.config(state=tk.DISABLED)
+
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+
+    tk.Button(center_frame, text="🧺 Baskets", command=baskets_management, **button_style).grid(row=0, column=0,
                                                                                                    padx=15, pady=15)
 
     # פרטים לכל עיר
@@ -1002,6 +1237,3 @@ root.mainloop()
 
 cur.close()
 conn.close()
-
-
-
